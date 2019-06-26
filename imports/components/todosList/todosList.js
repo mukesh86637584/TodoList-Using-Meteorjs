@@ -6,45 +6,70 @@ import { Tasks } from '../../api/tasks.js';
 class TodosListCtrl {
   constructor($scope) {
     $scope.viewModel(this);
-    this.helpers({
-      tasks() {
-        return Tasks.find({}, {sort: {
-          createdAt: -1}
-      })
-    }
 
-  })
-}
+    this.hideCompleted = false;
+
+
+        this.helpers({
+          tasks() {
+            const selector = {};
+            if (this.getReactively('hideCompleted')) {
+              selector.checked = {
+                $ne: true
+              };
+            }
+            return Tasks.find(selector, {
+              sort: {
+                createdAt: -1
+              }
+            })
+          },
+
+
+          incompleteCount() {
+            return Tasks.find({
+              checked: {
+                $ne: true
+              }
+            }).count();
+          }
+
+        })
+      }
+
+      
+
   addTask(newTask) {
-    // Insert a task into the collection
-    Tasks.insert({
-      text: newTask,
-      createdAt: new Date
-    });
- 
-    // Clear form
-    this.newTask = '';
-  }
+        // Insert a task into the collection
+        Tasks.insert({
+          text: newTask,
+          createdAt: new Date
+        });
+
+        // Clear form
+        this.newTask = '';
+      }
 
   setChecked(task) {
-    // Set the checked property to the opposite of its current value
-    Tasks.update(task._id, {
-      $set: {
-        checked: !task.checked
-      },
-    });
-  }
+        // Set the checked property to the opposite of its current value
+        Tasks.update(task._id, {
+          $set: {
+            checked: !task.checked
+          },
+        });
+      }
  
   removeTask(task) {
-    Tasks.remove(task._id);
-  }
+        Tasks.remove(task._id);
+      }
 
-}
+    }
 
 export default angular.module('todosList', [
-  angularMeteor
-])
-  .component('todosList', {
-    templateUrl: 'imports/components/todosList/todosList.html',
-    controller: TodosListCtrl
-  });
+      angularMeteor
+    ])
+      .component('todosList', {
+        templateUrl: 'imports/components/todosList/todosList.html',
+        controller: TodosListCtrl
+      });
+    

@@ -14,3 +14,4 @@ angular.module('simple-todos', [
   angularMeteor,
   todosList.name
 ]);
+
