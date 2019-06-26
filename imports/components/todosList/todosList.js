@@ -32,18 +32,24 @@ class TodosListCtrl {
                 $ne: true
               }
             }).count();
+          },
+
+          currentUser() {
+            return Meteor.user();
           }
 
         })
       }
 
-      
+
 
   addTask(newTask) {
         // Insert a task into the collection
         Tasks.insert({
           text: newTask,
-          createdAt: new Date
+          createdAt: new Date,
+          owner: Meteor.userId(),
+          username: Meteor.user().username
         });
 
         // Clear form
